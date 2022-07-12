@@ -1,23 +1,23 @@
 import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { SwaggerModule } from '@nestjs/swagger';
+import { readFile } from 'fs/promises';
+import { dirname, join } from 'path';
+import { parse } from 'yaml';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const PORT = process.env.PORT || 4000;
 
-  const config = new DocumentBuilder()
-    .setTitle('REST Service example')
-    .setDescription('The REST Service API description')
-    .setVersion('1.0')
-    .addTag('rest')
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  const rootDirname = dirname(__dirname);
+  const DOC_API = await readFile(join(rootDirname, 'doc', 'api.yaml'), 'utf-8');
+  const document = parse(DOC_API);
+
+  SwaggerModule.setup('doc', app, document);
 
   await app.listen(PORT);
   console.log(`
   🚀 Server running on http://localhost:${PORT}
-  👌 Swagger: http://localhost:${PORT}/api`);
+  👌 Swagger: http://localhost:${PORT}/doc`);
 }
 bootstrap();
