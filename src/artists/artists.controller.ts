@@ -8,6 +8,7 @@ import {
   HttpStatus,
   HttpCode,
   Put,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { ArtistsService } from './artists.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
@@ -32,14 +33,16 @@ export class ArtistsController {
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  async findOne(@Param('id') id: string): Promise<Artist> {
+  async findOne(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+  ): Promise<Artist> {
     return this.artistsService.findOne(id);
   }
 
   @Put(':id')
   @HttpCode(HttpStatus.OK)
   async update(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Body() updateArtistDto: UpdateArtistDto,
   ): Promise<Artist> {
     return this.artistsService.update(id, updateArtistDto);
@@ -47,7 +50,9 @@ export class ArtistsController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param('id') id: string): Promise<void> {
+  async remove(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+  ): Promise<void> {
     return this.artistsService.remove(id);
   }
 }

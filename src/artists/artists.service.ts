@@ -1,14 +1,9 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { Artist } from './interfaces/artist.interface';
-import { validate as isValidUUID } from 'uuid';
 
 @Injectable()
 export class ArtistsService {
@@ -24,16 +19,12 @@ export class ArtistsService {
     return newArtist;
   }
 
-  findAll() {
+  findAll(): Artist[] {
     return this.artists;
   }
 
   findOne(id: string): Artist {
     const artist: Artist = this.artists.find((a) => a.id === id);
-
-    if (!isValidUUID(id)) {
-      throw new BadRequestException('ID is invalid.');
-    }
 
     if (!artist) {
       throw new NotFoundException('Artist not found.');
@@ -43,10 +34,6 @@ export class ArtistsService {
   }
 
   update(id: string, updateArtistDto: UpdateArtistDto): Artist {
-    if (!isValidUUID(id)) {
-      throw new BadRequestException('ID is invalid.');
-    }
-
     const index: number = this.artists.findIndex((artist) => artist.id === id);
 
     if (index === -1) {
@@ -64,9 +51,6 @@ export class ArtistsService {
   }
 
   remove(id: string): void {
-    if (!isValidUUID(id)) {
-      throw new BadRequestException('ID is invalid.');
-    }
     const index: number = this.artists.findIndex((artist) => artist.id === id);
 
     if (index === -1) {
