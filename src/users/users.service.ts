@@ -1,26 +1,82 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';
+
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './interfaces/user.interface';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  private users: Array<User> = [];
+
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const maxId: number = Math.max(
+      ...this.users.map((user) => user.version),
+      0,
+    );
+    const version: number = maxId + 1;
+
+    const createdAt = new Date().getTime() + 24 * 60 * 60 * 1000;
+
+    const newUser: User = {
+      id: uuidv4(),
+      ...createUserDto,
+      version,
+      createdAt,
+    };
+
+    this.users.push(newUser);
+    return newUser;
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll(): Promise<User[]> {
+    return this.users;
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string): Promise<User> {
+    const user: User = this.users.find((a) => a.id === id);
+
+    if (!user) {
+      throw new NotFoundException('User not found.');
+    }
+
+    return user;
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+    const index: number = this.users.findIndex((user) => user.id === id);
+
+    if (index === -1) {
+      throw new NotFoundException('User not found.');
+    }
+
+    const maxId: number = Math.max(
+      ...this.users.map((user) => user.version),
+      0,
+    );
+    const version: number = maxId + 1;
+
+    const updatedAt = new Date().getTime() + 24 * 60 * 60 * 1000;
+
+    const newUser: User = {
+      id,
+      ...updateUserDto,
+      version,
+      updatedAt,
+    };
+
+    this.users[index] = newUser;
+
+    return newUser;
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} user`;
+  async remove(id: string): Promise<void> {
+    const index: number = this.users.findIndex((user) => user.id === id);
+
+    if (index === -1) {
+      throw new NotFoundException('User not found.');
+    }
+
+    this.users.splice(index, 1);
   }
 }
