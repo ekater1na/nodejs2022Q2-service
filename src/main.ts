@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule } from '@nestjs/swagger';
 import { readFile } from 'fs/promises';
@@ -14,6 +15,8 @@ async function bootstrap() {
   const document = parse(DOC_API);
 
   SwaggerModule.setup('doc', app, document);
+
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
   await app.listen(PORT);
   console.log(`
