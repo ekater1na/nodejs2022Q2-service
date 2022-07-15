@@ -1,26 +1,94 @@
-import { Injectable } from '@nestjs/common';
-import { CreateFavoriteDto } from './dto/create-favorite.dto';
-import { UpdateFavoriteDto } from './dto/update-favorite.dto';
+import {
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
+import { AlbumsService } from 'src/albums/albums.service';
+import { ArtistsService } from 'src/artists/artists.service';
+import { TracksService } from 'src/tracks/tracks.service';
 
 @Injectable()
 export class FavoritesService {
-  create(createFavoriteDto: CreateFavoriteDto) {
-    return 'This action adds a new favorite';
+  private favorites = {
+    tracks: [],
+    albums: [],
+    artists: [],
+  };
+
+  constructor(
+    private readonly tracksService: TracksService,
+    private readonly albumsService: AlbumsService,
+    private readonly artistsService: ArtistsService,
+  ) {}
+
+  addTrack(id: string) {
+    const track: any = this.tracksService.tracks.find((a) => a.id === id);
+
+    if (!track) {
+      throw new UnprocessableEntityException('Track not found.');
+    }
+    this.favorites.tracks.push(track);
+    return track;
+  }
+
+  addAlbum(id: string) {
+    const album: any = this.albumsService.albums.find((a) => a.id === id);
+
+    if (!album) {
+      throw new UnprocessableEntityException('Album not found.');
+    }
+    this.favorites.albums.push(album);
+    return album;
+  }
+
+  addArtist(id: string) {
+    const artist: any = this.artistsService.artists.find((a) => a.id === id);
+
+    if (!artist) {
+      throw new UnprocessableEntityException('Artist not found.');
+    }
+    this.favorites.artists.push(artist);
+    return artist;
   }
 
   findAll() {
-    return `This action returns all favorites`;
+    return this.favorites;
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} favorite`;
+  removeTrack(id: string): void {
+    const index: number = this.favorites.tracks.findIndex(
+      (track) => track.id === id,
+    );
+    console.log(index);
+
+    if (index === -1) {
+      throw new NotFoundException('Track not found.');
+    }
+
+    this.favorites.tracks.splice(index, 1);
   }
 
-  update(id: string, updateFavoriteDto: UpdateFavoriteDto) {
-    return `This action updates a #${id} favorite`;
+  removeAlbum(id: string): void {
+    const index: number = this.favorites.albums.findIndex(
+      (album) => album.id === id,
+    );
+
+    if (index === -1) {
+      throw new NotFoundException('Album not found.');
+    }
+
+    this.favorites.albums.splice(index, 1);
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} favorite`;
+  removeArtist(id: string): void {
+    const index: number = this.favorites.artists.findIndex(
+      (artist) => artist.id === id,
+    );
+
+    if (index === -1) {
+      throw new NotFoundException('Artist not found.');
+    }
+
+    this.favorites.artists.splice(index, 1);
   }
 }
