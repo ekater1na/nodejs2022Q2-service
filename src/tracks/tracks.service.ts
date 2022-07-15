@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { DbService } from 'src/db/db.service';
 import { v4 as uuidv4 } from 'uuid';
 
 import { CreateTrackDto } from './dto/create-track.dto';
@@ -7,24 +8,22 @@ import { Track } from './interfaces/track.interface';
 
 @Injectable()
 export class TracksService {
-  tracks: Array<Track> = [];
-
   create(createTrackDto: CreateTrackDto): Track {
     const newTrack: Track = {
       id: uuidv4(),
       ...createTrackDto,
     };
 
-    this.tracks.push(newTrack);
+    DbService.tracks.push(newTrack);
     return newTrack;
   }
 
   findAll(): Track[] {
-    return this.tracks;
+    return DbService.tracks;
   }
 
   findOne(id: string): Track {
-    const track: Track = this.tracks.find((a) => a.id === id);
+    const track: Track = DbService.tracks.find((a) => a.id === id);
 
     if (!track) {
       throw new NotFoundException('Track not found.');
@@ -34,7 +33,9 @@ export class TracksService {
   }
 
   update(id: string, updateTrackDto: UpdateTrackDto): Track {
-    const index: number = this.tracks.findIndex((track) => track.id === id);
+    const index: number = DbService.tracks.findIndex(
+      (track) => track.id === id,
+    );
 
     if (index === -1) {
       throw new NotFoundException('Track not found.');
@@ -45,18 +46,20 @@ export class TracksService {
       ...updateTrackDto,
     };
 
-    this.tracks[index] = newTrack;
+    DbService.tracks[index] = newTrack;
 
     return newTrack;
   }
 
   remove(id: string): void {
-    const index: number = this.tracks.findIndex((track) => track.id === id);
+    const index: number = DbService.tracks.findIndex(
+      (track) => track.id === id,
+    );
 
     if (index === -1) {
       throw new NotFoundException('Track not found.');
     }
 
-    this.tracks.splice(index, 1);
+    DbService.tracks.splice(index, 1);
   }
 }

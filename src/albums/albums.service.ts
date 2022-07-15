@@ -1,4 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { DbService } from 'src/db/db.service';
+import { FavoritesService } from 'src/favorites/favorites.service';
 import { v4 as uuidv4 } from 'uuid';
 
 import { CreateAlbumDto } from './dto/create-album.dto';
@@ -7,7 +9,7 @@ import { Album } from './interfaces/album.interface';
 
 @Injectable()
 export class AlbumsService {
-  albums: Array<Album> = [];
+  constructor(private readonly favoritesService: FavoritesService) {}
 
   create(createAlbumDto: CreateAlbumDto): Album {
     const newAlbum: Album = {
@@ -15,16 +17,16 @@ export class AlbumsService {
       ...createAlbumDto,
     };
 
-    this.albums.push(newAlbum);
+    DbService.albums.push(newAlbum);
     return newAlbum;
   }
 
   findAll(): Album[] {
-    return this.albums;
+    return DbService.albums;
   }
 
   findOne(id: string): Album {
-    const album: Album = this.albums.find((a) => a.id === id);
+    const album: Album = DbService.albums.find((a) => a.id === id);
 
     if (!album) {
       throw new NotFoundException('Album not found.');
@@ -34,7 +36,9 @@ export class AlbumsService {
   }
 
   update(id: string, updateAlbumDto: UpdateAlbumDto): Album {
-    const index: number = this.albums.findIndex((album) => album.id === id);
+    const index: number = DbService.albums.findIndex(
+      (album) => album.id === id,
+    );
 
     if (index === -1) {
       throw new NotFoundException('Album not found.');
@@ -45,18 +49,26 @@ export class AlbumsService {
       ...updateAlbumDto,
     };
 
-    this.albums[index] = newAlbum;
+    DbService.albums[index] = newAlbum;
 
     return newAlbum;
   }
 
   remove(id: string) {
-    const index: number = this.albums.findIndex((album) => album.id === id);
+    const index: number = DbService.albums.findIndex(
+      (album) => album.id === id,
+    );
 
     if (index === -1) {
       throw new NotFoundException('Album not found.');
     }
 
-    this.albums.splice(index, 1);
+    DbService.albums.splice(index, 1);
+
+    DbService.tracks.forEach((track) => {
+      if (track.albumId === id) {
+        track.albumId = null;
+      }
+    });
   }
 }
