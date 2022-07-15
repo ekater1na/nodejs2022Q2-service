@@ -7,7 +7,7 @@ import { Artist } from './interfaces/artist.interface';
 
 @Injectable()
 export class ArtistsService {
-  private artists: Array<Artist> = [];
+  artists: Array<Artist> = [];
 
   create(createArtistDto: CreateArtistDto): Artist {
     const newArtist: Artist = {

@@ -7,7 +7,7 @@ import { Album } from './interfaces/album.interface';
 
 @Injectable()
 export class AlbumsService {
-  private albums: Array<Album> = [];
+  albums: Array<Album> = [];
 
   create(createAlbumDto: CreateAlbumDto): Album {
     const newAlbum: Album = {

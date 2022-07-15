@@ -7,7 +7,7 @@ import { Track } from './interfaces/track.interface';
 
 @Injectable()
 export class TracksService {
-  private tracks: Array<Track> = [];
+  tracks: Array<Track> = [];
 
   create(createTrackDto: CreateTrackDto): Track {
     const newTrack: Track = {
