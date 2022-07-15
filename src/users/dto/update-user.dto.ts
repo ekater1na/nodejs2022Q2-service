@@ -16,7 +16,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   version: number; // integer number, increments on update
 
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   createdAt: number; // timestamp of creation
 
   @IsNumber()

@@ -10,19 +10,14 @@ export class UsersService {
   private users: Array<User> = [];
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const maxId: number = Math.max(
-      ...this.users.map((user) => user.version),
-      0,
-    );
-    const version: number = maxId + 1;
-
-    const createdAt = new Date().getTime() + 24 * 60 * 60 * 1000;
+    const maxVersion = 0;
 
     const newUser: User = {
       id: uuidv4(),
       ...createUserDto,
-      version,
-      createdAt,
+      version: maxVersion + 1,
+      createdAt: +new Date(),
+      updatedAt: +new Date(),
     };
 
     this.users.push(newUser);
@@ -50,19 +45,17 @@ export class UsersService {
       throw new NotFoundException('User not found.');
     }
 
-    const maxId: number = Math.max(
+    const maxVersion: number = Math.max(
       ...this.users.map((user) => user.version),
       0,
     );
-    const version: number = maxId + 1;
-
-    const updatedAt = new Date().getTime() + 24 * 60 * 60 * 1000;
 
     const newUser: User = {
       id,
       ...updateUserDto,
-      version,
-      updatedAt,
+      version: maxVersion + 1,
+      createdAt: updateUserDto.createdAt,
+      updatedAt: +new Date(),
     };
 
     this.users[index] = newUser;
