@@ -1,8 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserEntity } from './entities/user.entity';
 import { User } from './interfaces/user.interface';
 
 @Injectable()
@@ -12,13 +18,13 @@ export class UsersService {
   async create(createUserDto: CreateUserDto): Promise<User> {
     const maxVersion = 0;
 
-    const newUser: User = {
+    const newUser = new UserEntity({
       id: uuidv4(),
       ...createUserDto,
       version: maxVersion + 1,
       createdAt: +new Date(),
       updatedAt: +new Date(),
-    };
+    });
 
     this.users.push(newUser);
     return newUser;
@@ -50,17 +56,14 @@ export class UsersService {
       0,
     );
 
-    const newUser: User = {
-      id,
-      ...updateUserDto,
-      version: maxVersion + 1,
-      createdAt: updateUserDto.createdAt,
-      updatedAt: +new Date(),
-    };
+    if (updateUserDto.oldPassword !== this.users[index].password)
+      throw new HttpException('Wrong old password', HttpStatus.FORBIDDEN);
 
-    this.users[index] = newUser;
+    this.users[index].password = updateUserDto.newPassword;
+    this.users[index].version = maxVersion + 1;
+    this.users[index].updatedAt = Date.now();
 
-    return newUser;
+    return this.users[index];
   }
 
   async remove(id: string): Promise<void> {

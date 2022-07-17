@@ -1,23 +1,11 @@
-import { IsString, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+import { IsString, IsNotEmpty } from 'class-validator';
 
 export class CreateUserDto {
-  @IsString()
   @IsNotEmpty()
+  @IsString()
   login: string;
 
-  // @IsString()
-  // @IsNotEmpty()
-  // password: string;
-
-  @IsNumber()
-  @IsOptional()
-  version: number; // integer number, increments on update
-
-  @IsNumber()
-  @IsOptional()
-  createdAt: number; // timestamp of creation
-
-  @IsNumber()
-  @IsOptional()
-  updatedAt: number; // timestamp of last update
+  @IsNotEmpty()
+  @IsString()
+  password: string;
 }
