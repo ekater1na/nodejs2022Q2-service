@@ -73,5 +73,15 @@ export class ArtistsService {
         track.artistId = null;
       }
     });
+
+    const indexAlb: number = DbService.favorites.albums.findIndex(
+      (artist) => artist.id === id,
+    );
+
+    if (index === -1) {
+      throw new NotFoundException('Album not found.');
+    }
+
+    DbService.favorites.albums.splice(indexAlb, 1);
   }
 }
