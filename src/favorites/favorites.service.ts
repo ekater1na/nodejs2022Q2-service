@@ -46,7 +46,6 @@ export class FavoritesService {
     const index: number = DbService.favorites.tracks.findIndex(
       (track) => track.id === id,
     );
-    console.log(index);
 
     if (index === -1) {
       throw new NotFoundException('Track not found.');
