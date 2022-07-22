@@ -12,7 +12,6 @@ services:
       - node_modules:/usr/src/app/node_modules
     ports:
       - ${PORT}:${PORT}
-      - 9229:9229
     command: npm run start:dev
     env_file:
       - .env    
@@ -30,7 +29,6 @@ services:
       PG_DATA: /var/lib/postgresql/data
     ports:
       - ${DB_PORT}:${DB_PORT}
-      - 5432:5432
     volumes:
       - data:/var/lib/postgresql/data
 networks:
