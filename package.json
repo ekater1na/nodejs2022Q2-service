@@ -21,11 +21,16 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "scan:app": "docker scan nodejs2022q2-service_main",
     "scan:db": "docker scan postgres",
-    "scan": "scan:app && scan:db"
+    "scan": "scan:app && scan:db",
+    "studio": "npx run studio"
+  },
+  "prisma": {
+    "schema": "prisma/schema.prisma"
   },
   "dependencies": {
     "@nestjs/cli": "^8.0.0",
     "@nestjs/common": "^8.0.0",
+    "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^8.0.0",
     "@nestjs/jwt": "^9.0.0",
     "@nestjs/mapped-types": "^1.0.1",

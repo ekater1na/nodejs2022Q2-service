@@ -11,12 +11,48 @@ datasource db {
 }
 
 model User {
-  id        String   @unique
+  id        String @unique
   login     String
   password  String
   version   Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt Int
+  updatedAt Int
 
   @@map("users")
+}
+
+model Artist {
+  id     String  @unique
+  name   String
+  grammy Boolean
+
+  @@map("artists")
+}
+
+model Album {
+  id     String  @unique
+  name   String
+  year Int
+  artistId String?
+
+  @@map("albums")
+}
+
+model Track {
+  id       String  @unique
+  name     String
+  artistId String?
+  albumId  String?
+  duration Int
+
+  @@map("tracks")
+}
+
+model Favorites {
+  id       String  @unique
+  artists String[]
+  albums  String[]
+  tracks  String[]
+
+  @@map("favorites")
 }
