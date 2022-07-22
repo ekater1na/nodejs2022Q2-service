@@ -11,7 +11,7 @@ datasource db {
 }
 
 model User {
-  id        String @unique
+  id        String   @unique
   login     String
   password  String
   version   Int
