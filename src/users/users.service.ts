@@ -20,19 +20,13 @@ export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   async create(createUserDto: CreateUserDto): Promise<any> {
-    // generate the password hash
-    const hash = await bcrypt.hash(
-      createUserDto.password,
-      +process.env.CRYPT_SALT,
-    );
-
     try {
       // save the new user in the db
       const user = await this.prisma.user.create({
         data: {
           id: uuidv4(),
           login: createUserDto.login,
-          password: hash,
+          password: createUserDto.password,
           version: 1,
           createdAt: +new Date(),
           updatedAt: +new Date(),
@@ -75,34 +69,15 @@ export class UsersService {
 
     if (!user) throw new NotFoundException('User not found.');
 
-    const hash = await bcrypt.hash(
-      updateUserDto.oldPassword,
-      +process.env.CRYPT_SALT,
-    );
-
-    console.log(hash, user.password);
-
-    const pwMatches = await bcrypt.compare(user.password, hash);
-
-    if (!pwMatches)
+    if (user.password !== updateUserDto.oldPassword)
       throw new HttpException('Wrong old password', HttpStatus.FORBIDDEN);
-
-    // const user1 = this.users[index];
-    // user1.password = updateUserDto.newPassword;
-    // user1.version = maxVersion + 1;
-    // user1.updatedAt = Date.now();
-
-    const updPass = await bcrypt.hash(
-      updateUserDto.newPassword,
-      +process.env.CRYPT_SALT,
-    );
 
     const updUser: User = await this.prisma.user.update({
       where: {
         id: id,
       },
       data: {
-        password: updPass,
+        password: updateUserDto.newPassword,
         version: { increment: 1 },
         updatedAt: Date.now(),
       },
