@@ -40,7 +40,9 @@ export class TracksService {
   }
 
   async update(id: string, updateTrackDto: UpdateTrackDto): Promise<Track> {
-    const track: Track = await this.prisma.track.update({
+    await this.findOne(id);
+
+    const updTrack: Track = await this.prisma.track.update({
       where: {
         id: id,
       },
@@ -49,19 +51,19 @@ export class TracksService {
       },
     });
 
-    if (!track) throw new NotFoundException('Track not found.');
-
-    return track;
+    return updTrack;
   }
 
   async remove(id: string): Promise<void> {
-    const track: Track = await this.prisma.track.delete({
+    await this.findOne(id);
+
+    await this.prisma.track.delete({
       where: {
         id: id,
       },
     });
 
-    if (!track) throw new NotFoundException('Track not found.');
+    // if (!track) throw new NotFoundException('Track not found.');
 
     // const indexTrack: number = DbService.favorites.tracks.findIndex(
     //   (artist) => artist.id === id,

@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { v4 as uuidv4 } from 'uuid';
-import * as bcrypt from 'bcrypt';
 import 'dotenv/config';
 
 import { CreateUserDto } from './dto/create-user.dto';
@@ -15,8 +14,6 @@ import { User } from './interfaces/user.interface';
 
 @Injectable()
 export class UsersService {
-  private users: Array<User> = [];
-
   constructor(private prisma: PrismaService) {}
 
   async create(createUserDto: CreateUserDto): Promise<any> {
@@ -89,20 +86,12 @@ export class UsersService {
   }
 
   async remove(id: string): Promise<void> {
-    const user: User = await this.prisma.user.findUnique({
+    await this.findOne(id);
+
+    await this.prisma.user.delete({
       where: {
         id: id,
       },
     });
-
-    if (!user) {
-      throw new NotFoundException('User not found.');
-    } else {
-      await this.prisma.user.delete({
-        where: {
-          id: id,
-        },
-      });
-    }
   }
 }

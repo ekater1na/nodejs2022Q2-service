@@ -43,6 +43,8 @@ export class AlbumsService {
   }
 
   async update(id: string, updateAlbumDto: UpdateAlbumDto): Promise<Album> {
+    await this.findOne(id);
+
     const album: Album = await this.prisma.album.update({
       where: {
         id: id,
@@ -52,19 +54,17 @@ export class AlbumsService {
       },
     });
 
-    if (!album) throw new NotFoundException('Album not found.');
-
     return album;
   }
 
   async remove(id: string) {
-    const album: Album = await this.prisma.album.delete({
+    await this.findOne(id);
+
+    await this.prisma.album.delete({
       where: {
         id: id,
       },
     });
-
-    if (!album) throw new NotFoundException('Album not found.');
 
     // DbService.tracks.forEach((track) => {
     //   if (track.albumId === id) {
