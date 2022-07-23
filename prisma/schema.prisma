@@ -22,43 +22,49 @@ model User {
 }
 
 model Artist {
-  id     String  @unique
-  name   String
-  grammy Boolean
-  Album  Album[]
-  Track  Track[]
+  id          String     @unique
+  name        String
+  grammy      Boolean
+  Album       Album[]
+  Track       Track[]
+  Favorites   Favorites? @relation(fields: [favoritesId], references: [id])
+  favoritesId String?
 
   @@map("artists")
 }
 
 model Album {
-  id       String  @unique
-  name     String
-  year     Int
-  artist   Artist? @relation(fields: [artistId], references: [id])
-  artistId String?
-  Track    Track[]
+  id          String     @unique
+  name        String
+  year        Int
+  artist      Artist?    @relation(fields: [artistId], references: [id])
+  artistId    String?
+  Track       Track[]
+  Favorites   Favorites? @relation(fields: [favoritesId], references: [id])
+  favoritesId String?
 
   @@map("albums")
 }
 
 model Track {
-  id       String  @unique
-  name     String
-  artist   Artist? @relation(fields: [artistId], references: [id])
-  artistId String?
-  album    Album?  @relation(fields: [albumId], references: [id])
-  albumId  String?
-  duration Int
+  id          String     @unique
+  name        String
+  artist      Artist?    @relation(fields: [artistId], references: [id])
+  artistId    String?
+  album       Album?     @relation(fields: [albumId], references: [id])
+  albumId     String?
+  duration    Int
+  Favorites   Favorites? @relation(fields: [favoritesId], references: [id])
+  favoritesId String?
 
   @@map("tracks")
 }
 
 model Favorites {
   id      String   @unique
-  artists String[]
-  albums  String[]
-  tracks  String[]
+  artists Artist[]
+  albums  Album[]
+  tracks  Track[]
 
   @@map("favorites")
 }
