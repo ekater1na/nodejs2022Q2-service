@@ -3,7 +3,7 @@ version: '3.9'
 services:
   main:
     container_name: main
-    restart: always
+    restart: unless-stopped
     build:
       context: .
       dockerfile: Dockerfile
@@ -21,7 +21,7 @@ services:
   postgres:
     container_name: postgres
     image: postgres:latest    
-    restart: always
+    restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_USER: ${DB_USERNAME}
