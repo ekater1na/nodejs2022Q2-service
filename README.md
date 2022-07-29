@@ -73,6 +73,12 @@ To run containers:
 docker compose up
 ```
 
+or 
+
+```
+npm run docker
+```
+
 To start vulnerabilities scanning:
 ```
 npm run scan:app
