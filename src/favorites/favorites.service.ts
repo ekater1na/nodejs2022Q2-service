@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { Album } from 'src/albums/interfaces/album.interface';
 import { Artist } from 'src/artists/interfaces/artist.interface';
 
