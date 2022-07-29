@@ -62,23 +62,11 @@ export class TracksService {
 
     DbService.tracks.splice(index, 1);
 
-    const indexFav: number = DbService.favorites.artists.findIndex(
-      (artist) => artist.id === id,
-    );
-
-    if (index === -1) {
-      throw new NotFoundException('Artist not found.');
-    }
-
-    DbService.favorites.artists.splice(indexFav, 1);
-
     const indexTrack: number = DbService.favorites.tracks.findIndex(
       (artist) => artist.id === id,
     );
 
-    if (index === -1) {
-      throw new NotFoundException('Track not found.');
-    }
+    if (index === -1) return null;
 
     DbService.favorites.tracks.splice(indexTrack, 1);
   }
