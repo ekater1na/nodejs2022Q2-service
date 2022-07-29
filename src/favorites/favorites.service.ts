@@ -110,6 +110,13 @@ export class FavoritesService {
         },
       },
     });
+    if (!favorites) {
+      return {
+        artists: [],
+        albums: [],
+        tracks: [],
+      };
+    }
     return favorites;
   }
 
