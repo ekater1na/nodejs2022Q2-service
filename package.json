@@ -19,9 +19,9 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "scan:app": "docker scan nodejs2022q2-service_main",
-    "scan:db": "docker scan postgres",
-    "scan": "scan:app && scan:db",
+    "scan:app": "docker scan rss-app_app",
+    "scan:db": "docker scan rss-app_postgres",
+    "scan": "npm run scan:app && npm run scan:db",
     "docker": "docker compose up -d --build",
     "prisma:migrate": "npx prisma migrate dev --name dev",
     "studio": "npx run studio"
