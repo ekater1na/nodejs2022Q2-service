@@ -1,5 +1,4 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { Album } from '@prisma/client';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
 
@@ -10,19 +9,19 @@ export class AuthController {
 
   @Post('/signup')
   @HttpCode(HttpStatus.CREATED)
-  async signup(@Body() authDto: AuthDto): Promise<Album> {
+  async signup(@Body() authDto: AuthDto): Promise<string> {
     return this.authService.signup(authDto);
   }
 
   @Post('/login')
   @HttpCode(HttpStatus.OK)
-  async login(@Body() createAlbumDto: any): Promise<Album> {
-    return this.authService.login(createAlbumDto);
+  async login(@Body() authDto: AuthDto): Promise<string> {
+    return this.authService.login(authDto);
   }
 
   @Post('/refresh')
   @HttpCode(HttpStatus.OK)
-  async refresh(@Body() createAlbumDto: any): Promise<Album> {
+  async refresh(@Body() createAlbumDto: any): Promise<string> {
     return this.authService.refresh(createAlbumDto);
   }
 }
