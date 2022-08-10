@@ -59,11 +59,12 @@ export class UsersService {
     if (updateUserDto.oldPassword !== this.users[index].password)
       throw new HttpException('Wrong old password', HttpStatus.FORBIDDEN);
 
-    this.users[index].password = updateUserDto.newPassword;
-    this.users[index].version = maxVersion + 1;
-    this.users[index].updatedAt = Date.now();
+    const user = this.users[index];
+    user.password = updateUserDto.newPassword;
+    user.version = maxVersion + 1;
+    user.updatedAt = Date.now();
 
-    return this.users[index];
+    return user;
   }
 
   async remove(id: string): Promise<void> {

@@ -66,6 +66,18 @@ npm run lint
 npm run format
 ```
 
+## Run docker
+To run containers:
+
+```
+docker compose up
+```
+
+To start vulnerabilities scanning:
+```
+npm run scan:app
+```
+
 ### Debugging in VSCode
 
 Press <kbd>F5</kbd> to debug.

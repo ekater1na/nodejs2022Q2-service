@@ -75,9 +75,7 @@ export class AlbumsService {
       (artist) => artist.id === id,
     );
 
-    if (index === -1) {
-      throw new NotFoundException('Album not found.');
-    }
+    if (index === -1) return null;
 
     DbService.favorites.albums.splice(indexFav, 1);
   }
